@@ -28,7 +28,7 @@ export default function Login({ status, canResetPassword }) {
         {/* LOGO */}
         <div className="flex justify-center mb-6">
             <img
-                src="./build/assets/logo.png"
+                src="/img/pintareducation.png"
                 alt="Pintar Education"
                 className="h-20"
             />
@@ -39,7 +39,7 @@ export default function Login({ status, canResetPassword }) {
             Welcome Back
         </h2>
         <p className="text-center text-sm text-gray-500 mb-8">
-            Sign in to continue to Pintar Education
+            Sign in to Continue to Pintar Education
         </p>
 
         {status && (
@@ -114,6 +114,17 @@ export default function Login({ status, canResetPassword }) {
                     Log in
                 </PrimaryButton>
             </div>
+
+            <div className="mt-6 text-center text-sm text-gray-600">
+            Don&apos;t have an account?{' '}
+            <Link
+                href={route('register')}
+                className="font-medium text-[#145da0] hover:underline"
+            >
+            Register
+            </Link>
+            </div>
+
         </form>
     </GuestLayout>
     );

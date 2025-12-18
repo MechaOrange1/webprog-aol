@@ -28,7 +28,7 @@ export default function Register() {
             <Head title="Register" />
 
             <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Create Your Account</h2>
+                <h2 className="text-center text-2xl font-bold text-[#145da0]">Create Your Account</h2>
                 <p className="mt-2 text-sm text-gray-600">
                     Join us today and start your learning journey
                 </p>
