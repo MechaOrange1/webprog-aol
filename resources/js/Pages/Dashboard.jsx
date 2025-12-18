@@ -26,7 +26,7 @@ export default function Dashboard({ auth }) {
 
             {/* FULL WIDTH GREETING BAR */}
             <div className="w-full mt-2">
-                <div className="w-full pt-2 pb-20 text-white shadow-md">
+                <div className="w-full bg-gradient-to-r from-[#145da0] to-[#ffd21f] pt-2 pb-20 text-white shadow-md">
                     <div className="mx-auto max-w-7xl px-6">
                         <p className="text-lg opacity-90 mt-6">
                             {getGreeting()},
