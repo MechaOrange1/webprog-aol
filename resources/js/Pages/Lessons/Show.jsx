@@ -1,52 +1,88 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head, Link, useForm } from "@inertiajs/react";
 
 export default function Show({ auth, lesson, isCompleted }) {
     const { post, processing } = useForm();
 
     const handleComplete = () => {
-        post(route('lessons.complete', lesson.id));
+        post(route("lessons.complete", lesson.id));
     };
 
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{lesson.title}</h2>}
+            header={
+                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                    {lesson.title}
+                </h2>
+            }
         >
             <Head title={lesson.title} />
 
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">
-                            <h3>Video Tutorial</h3>
-                            <div className="mb-4">
-                                {/* Placeholder for video player since video_url might be just a string */}
-                                <p>Video URL: <a href={lesson.video_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">{lesson.video_url}</a></p>
+                <div className="max-w-4xl mx-auto px-6">
+                    <div className="bg-white rounded-2xl shadow overflow-hidden">
+                        <div className="p-8">
+                            {/* VIDEO */}
+                            <div className="mb-8">
+                                <h3 className="text-lg font-semibold mb-3">
+                                    Video Tutorial
+                                </h3>
+
+                                {lesson.video_url ? (
+                                    <div className="aspect-video rounded-xl overflow-hidden bg-black">
+                                        <iframe
+                                            src={lesson.video_url}
+                                            title={lesson.title}
+                                            className="w-full h-full"
+                                            allowFullScreen
+                                        />
+                                    </div>
+                                ) : (
+                                    <p className="text-sm text-gray-500">
+                                        No video available
+                                    </p>
+                                )}
                             </div>
 
-                            <h3>Content</h3>
-                            <p className="mb-6">{lesson.content}</p>
+                            {/* CONTENT */}
+                            <div className="mb-8">
+                                <h3 className="text-lg font-semibold mb-3">
+                                    Materi
+                                </h3>
+                                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                                    {lesson.content}
+                                </p>
+                            </div>
 
-                            <div className="mb-6">
+                            {/* ACTION */}
+                            <div className="flex items-center justify-between border-t pt-6">
                                 {isCompleted ? (
-                                    <span className="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Lesson Completed</span>
+                                    <span className="inline-flex items-center bg-green-100 text-green-700 text-sm font-medium px-4 py-2 rounded-full">
+                                        ✅ Lesson Completed
+                                    </span>
                                 ) : (
                                     <button
                                         onClick={handleComplete}
                                         disabled={processing}
-                                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                                        className="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2.5 rounded-xl transition disabled:opacity-50"
                                     >
-                                        Mark as Complete
+                                        {processing
+                                            ? "Processing..."
+                                            : "Mark as Complete"}
                                     </button>
                                 )}
+
+                                <Link
+                                    href={route(
+                                        "subjects.show",
+                                        lesson.subject.id
+                                    )}
+                                    className="text-sm text-gray-500 hover:underline"
+                                >
+                                    ← Back to {lesson.subject.title}
+                                </Link>
                             </div>
-
-                            <hr className="my-4" />
-
-                            <Link href={route('subjects.show', lesson.subject.id)} className="text-blue-500 hover:underline">
-                                Back to {lesson.subject.title}
-                            </Link>
                         </div>
                     </div>
                 </div>

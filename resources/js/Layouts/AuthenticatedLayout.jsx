@@ -1,218 +1,127 @@
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link, usePage } from "@inertiajs/react";
-import { useState } from "react";
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
 
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false);
-
     return (
-        <div className="min-h-screen bg-gradient-to-r from-[#145da0] via-[#6fa3a1] to-[#ffd21f]">
-            <nav className="border-b border-gray-100 bg-white">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16 justify-between">
-                        <div className="flex">
-                            <div className="flex shrink-0 items-center">
-                                <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
-                                </Link>
-                            </div>
+        <div className="min-h-screen flex flex-col bg-gradient-to-r from-[#145da0] via-[#6fa3a1] to-[#ffd21f]">
+            {/* NAVBAR */}
+            <nav className="bg-white border-b border-gray-200">
+                <div className="max-w-7xl mx-auto px-6">
+                    <div className="flex h-16 items-center justify-between">
+                        {/* LEFT */}
+                        <div className="flex items-center gap-10">
+                            <Link href="/">
+                                <ApplicationLogo className="h-9 w-auto text-gray-800" />
+                            </Link>
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
-                                >
-                                    My Dashboard
-                                </NavLink>
-
-                                <NavLink
-                                    href={route("subjects.index")}
-                                    active={route().current("subjects.*")}
-                                >
-                                    Mata Pelajaran
-                                </NavLink>
-
-                                <NavLink
-                                    href={route("lessons.show", { lesson: 1 })}
-                                    active={route().current("lessons.*")}
-                                >
-                                    Video Tutorial
-                                </NavLink>
-
-                                <NavLink
-                                    href={route("quizzes.show", { quiz: 1 })}
-                                    active={route().current("quizzes.*")}
-                                >
-                                    Latihan Soal
-                                </NavLink>
-                            </div>
-                        </div>
-
-                        <div className="hidden sm:ms-6 sm:flex sm:items-center">
-                            <div className="relative ms-3">
-                                <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
-                                            >
-                                                {user.name}
-
-                                                <svg
-                                                    className="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </Dropdown.Trigger>
-
-                                    <Dropdown.Content>
-                                        <Dropdown.Link
-                                            href={route("profile.edit")}
-                                        >
-                                            Profile
-                                        </Dropdown.Link>
-                                        <Dropdown.Link
-                                            href={route("logout")}
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
-                            </div>
-                        </div>
-
-                        <div className="-me-2 flex items-center sm:hidden">
-                            <button
-                                onClick={() =>
-                                    setShowingNavigationDropdown(
-                                        (previousState) => !previousState
-                                    )
-                                }
-                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
+                            <NavLink
+                                href={route("dashboard")}
+                                active={route().current("dashboard")}
                             >
-                                <svg
-                                    className="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        className={
-                                            !showingNavigationDropdown
-                                                ? "inline-flex"
-                                                : "hidden"
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={
-                                            showingNavigationDropdown
-                                                ? "inline-flex"
-                                                : "hidden"
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                                My Dashboard
+                            </NavLink>
 
-                <div
-                    className={
-                        (showingNavigationDropdown ? "block" : "hidden") +
-                        " sm:hidden"
-                    }
-                >
-                    <div className="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            href={route("dashboard")}
-                            active={route().current("dashboard")}
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
-
-                        <ResponsiveNavLink
-                            href={route("subjects.index")}
-                            active={route().current("subjects.*")}
-                        >
-                            Mata Pelajaran
-                        </ResponsiveNavLink>
-
-                        <ResponsiveNavLink
-                            href={route("lessons.show", { lesson: 1 })}
-                            active={route().current("lessons.*")}
-                        >
-                            Video Tutorial
-                        </ResponsiveNavLink>
-
-                        <ResponsiveNavLink
-                            href={route("quizzes.show", { quiz: 1 })}
-                            active={route().current("quizzes.*")}
-                        >
-                            Latihan Soal
-                        </ResponsiveNavLink>
-                    </div>
-
-                    <div className="border-t border-gray-200 pb-1 pt-4">
-                        <div className="px-4">
-                            <div className="text-base font-medium text-gray-800">
-                                {user.name}
-                            </div>
-                            <div className="text-sm font-medium text-gray-500">
-                                {user.email}
-                            </div>
+                            {/* Tambah menu lain jika perlu */}
+                            {/* 
+                            <NavLink href={route("subjects.index")}>
+                                Subjects
+                            </NavLink> 
+                            */}
                         </div>
 
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route("profile.edit")}>
-                                Profile
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                method="post"
-                                href={route("logout")}
-                                as="button"
-                            >
-                                Log Out
-                            </ResponsiveNavLink>
+                        {/* RIGHT */}
+                        <div>
+                            <Dropdown>
+                                <Dropdown.Trigger>
+                                    <button
+                                        type="button"
+                                        className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
+                                    >
+                                        {user.name}
+                                        <svg
+                                            className="h-4 w-4"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                    </button>
+                                </Dropdown.Trigger>
+
+                                <Dropdown.Content align="right">
+                                    <Dropdown.Link href={route("profile.edit")}>
+                                        Profile
+                                    </Dropdown.Link>
+
+                                    <Dropdown.Link
+                                        href={route("student-dashboard")}
+                                    >
+                                        Student Dashboard
+                                    </Dropdown.Link>
+
+                                    <Dropdown.Link
+                                        href={route("logout")}
+                                        method="post"
+                                        as="button"
+                                    >
+                                        Logout
+                                    </Dropdown.Link>
+                                </Dropdown.Content>
+                            </Dropdown>
                         </div>
                     </div>
                 </div>
             </nav>
 
+            {/* OPTIONAL HEADER */}
             {header && (
                 <header className="bg-white shadow">
-                    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                        {header}
-                    </div>
+                    <div className="max-w-7xl mx-auto px-6 py-6">{header}</div>
                 </header>
             )}
 
-            <main>{children}</main>
+            {/* MAIN */}
+            <main className="flex-1">{children}</main>
+
+            {/* FOOTER */}
+            <footer className="bg-white border-t border-gray-200">
+                <div className="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+                    <p className="text-sm text-gray-500">
+                        © {new Date().getFullYear()} PintarEducation. All rights
+                        reserved.
+                    </p>
+
+                    {/* <div className="flex gap-6 text-sm">
+                        <Link
+                            href="/about"
+                            className="text-gray-500 hover:text-gray-700"
+                        >
+                            About
+                        </Link>
+                        <Link
+                            href="/contact"
+                            className="text-gray-500 hover:text-gray-700"
+                        >
+                            Contact
+                        </Link>
+                        <Link
+                            href="/privacy"
+                            className="text-gray-500 hover:text-gray-700"
+                        >
+                            Privacy Policy
+                        </Link>
+                    </div> */}
+                </div>
+            </footer>
         </div>
     );
 }
