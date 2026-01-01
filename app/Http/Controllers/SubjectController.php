@@ -10,12 +10,27 @@ use Illuminate\Support\Facades\Auth;
 
 class SubjectController extends Controller
 {
-    public function index()
-    {
-        return Inertia::render('Subjects/Index', [
-            'subjects' => Subject::all(),
-        ]);
-    }
+public function index()
+{
+    $user = Auth::user();
+
+    $subjects = Subject::all()->map(function ($subject) use ($user) {
+        return [
+            'id' => $subject->id,
+            'title' => $subject->title,
+            'description' => $subject->description,
+            'thumbnail_url' => $subject->thumbnail_url,
+            'level' => $subject->level,
+            'price' => $subject->price,
+            // Cek apakah user sudah enroll di subject ini
+            'is_enrolled' => $user ? $user->enrollments()->where('subject_id', $subject->id)->exists() : false,
+        ];
+    });
+
+    return Inertia::render('Subjects/Index', [
+        'subjects' => $subjects,
+    ]);
+}
 
     public function show(Subject $subject)
     {

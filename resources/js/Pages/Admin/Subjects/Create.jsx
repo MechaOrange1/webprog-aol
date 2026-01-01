@@ -5,7 +5,7 @@ export default function Create({ auth }) {
     const { data, setData, post, processing, errors } = useForm({
         title: '',
         description: '',
-        level: 'Beginner',
+        level: 'SD', // Default value
         price: '',
         thumbnail_url: ''
     });
@@ -18,90 +18,172 @@ export default function Create({ auth }) {
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Create Subject</h2>}
+            header={
+                <div className="flex flex-col">
+                    <h2 className="text-2xl font-bold text-[#145da0] tracking-tight">Create Subject</h2>
+                </div>
+            }
         >
             <Head title="Create Subject" />
 
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                        <form onSubmit={submit}>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">Title</label>
+            <div className="py-12 bg-[#f0f2f5] min-h-screen">
+                <div className="max-w-4xl mx-auto px-6 lg:px-8">
+                    
+                    {/* BACK BUTTON */}
+                    <div className="mb-8">
+                        <Link
+                            href={route("admin.subjects.index")}
+                            className="inline-flex items-center text-gray-400 font-semibold hover:text-[#145da0] transition-colors"
+                        >
+                            <span className="mr-2 transform group-hover:-translate-x-1 transition-transform">←</span> 
+                            Back to Managements
+                        </Link>
+                    </div>
+
+                    {/* FORM CARD */}
+                    <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden">
+                        
+                        {/* Header Card */}
+                        <div className="bg-blue-50/50 px-8 py-6 border-b border-gray-100">
+                            <h3 className="text-lg font-bold text-gray-800">New Subject Details</h3>
+                            <p className="text-sm text-gray-500">Fill in the information below to create a new class.</p>
+                        </div>
+
+                        <form onSubmit={submit} className="p-8 space-y-6">
+                            
+                            {/* TITLE INPUT */}
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Subject Title</label>
                                 <input
                                     type="text"
+                                    className="w-full rounded-2xl border-gray-200 focus:border-[#145da0] focus:ring-[#145da0] py-3 px-4 font-semibold text-gray-800 bg-gray-50/50 transition-all"
                                     value={data.title}
                                     onChange={(e) => setData('title', e.target.value)}
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    placeholder="e.g. Physics"
+                                    autoFocus
                                 />
-                                {errors.title && <div className="text-red-500 text-xs mt-1">{errors.title}</div>}
+                                {errors.title && <div className="text-red-500 text-xs mt-1 font-bold">{errors.title}</div>}
                             </div>
 
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                            {/* DESCRIPTION INPUT */}
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Description</label>
                                 <textarea
+                                    rows="4"
+                                    className="w-full rounded-2xl border-gray-200 focus:border-[#145da0] focus:ring-[#145da0] py-3 px-4 text-gray-700 bg-gray-50/50 transition-all resize-none"
                                     value={data.description}
                                     onChange={(e) => setData('description', e.target.value)}
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    placeholder="Explain what students will learn..."
                                 />
-                                {errors.description && <div className="text-red-500 text-xs mt-1">{errors.description}</div>}
+                                {errors.description && <div className="text-red-500 text-xs mt-1 font-bold">{errors.description}</div>}
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4 mb-4">
+                            {/* GRID: PRICE & LEVEL */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Level */}
                                 <div>
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">Level</label>
-                                    <select
-                                        value={data.level}
-                                        onChange={(e) => setData('level', e.target.value)}
-                                        className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    >
-                                        <option value="Beginner">Beginner</option>
-                                        <option value="Intermediate">Intermediate</option>
-                                        <option value="Advanced">Advanced</option>
-                                    </select>
-                                    {errors.level && <div className="text-red-500 text-xs mt-1">{errors.level}</div>}
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Education Level</label>
+                                    <div className="relative">
+                                        <select
+                                            className="w-full rounded-2xl border-gray-200 focus:border-[#145da0] focus:ring-[#145da0] py-3 px-4 font-bold text-gray-700 bg-gray-50/50 transition-all appearance-none"
+                                            value={data.level}
+                                            onChange={(e) => setData('level', e.target.value)}
+                                        >
+                                            <option value="SD">SD (Elementary)</option>
+                                            <option value="SMP">SMP (Junior High)</option>
+                                            <option value="SMA">SMA (High School)</option>
+                                            <option value="Umum">Umum (General)</option>
+                                        </select>
+                                        {/* Custom Chevron Icon for style */}
+                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                        </div>
+                                    </div>
+                                    {errors.level && <div className="text-red-500 text-xs mt-1 font-bold">{errors.level}</div>}
                                 </div>
+
+                                {/* Price */}
                                 <div>
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">Price</label>
-                                    <input
-                                        type="number"
-                                        value={data.price}
-                                        onChange={(e) => setData('price', e.target.value)}
-                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    />
-                                    {errors.price && <div className="text-red-500 text-xs mt-1">{errors.price}</div>}
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Price (IDR)</label>
+                                    <div className="relative">
+                                        <span className="absolute left-4 top-3.5 text-gray-400 font-bold text-sm">Rp</span>
+                                        <input
+                                            type="number"
+                                            className="w-full rounded-2xl border-gray-200 focus:border-[#145da0] focus:ring-[#145da0] py-3 pl-10 pr-4 font-bold text-gray-800 bg-gray-50/50 transition-all"
+                                            value={data.price}
+                                            onChange={(e) => setData('price', e.target.value)}
+                                            placeholder="0"
+                                        />
+                                    </div>
+                                    {errors.price && <div className="text-red-500 text-xs mt-1 font-bold">{errors.price}</div>}
                                 </div>
                             </div>
 
-                            <div className="mb-6">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">Thumbnail URL</label>
-                                <input
-                                    type="text"
-                                    value={data.thumbnail_url}
-                                    onChange={(e) => setData('thumbnail_url', e.target.value)}
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    placeholder="https://"
-                                />
-                                {errors.thumbnail_url && <div className="text-red-500 text-xs mt-1">{errors.thumbnail_url}</div>}
+                            {/* THUMBNAIL URL & PREVIEW */}
+                            <div className="bg-gray-50 p-6 rounded-[1.5rem] border border-gray-100">
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Thumbnail Image</label>
+                                
+                                <div className="flex flex-col md:flex-row gap-6 items-start">
+                                    {/* Preview Box */}
+                                    <div className="w-full md:w-1/3 flex-shrink-0">
+                                        <div className="aspect-video rounded-xl overflow-hidden bg-white border-2 border-dashed border-gray-300 relative group flex items-center justify-center">
+                                            {data.thumbnail_url ? (
+                                                <img 
+                                                    src={data.thumbnail_url} 
+                                                    alt="Preview" 
+                                                    className="w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        e.target.onerror = null;
+                                                        e.target.src = "https://placehold.co/600x400?text=Invalid+Link";
+                                                    }}
+                                                />
+                                            ) : (
+                                                <div className="text-center p-4">
+                                                    <span className="text-2xl mb-2 block">🖼️</span>
+                                                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wide">No Image Preview</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Input URL */}
+                                    <div className="w-full md:w-2/3">
+                                        <input
+                                            type="text"
+                                            className="w-full rounded-2xl border-gray-200 focus:border-[#145da0] focus:ring-[#145da0] py-3 px-4 text-sm text-gray-600 bg-white transition-all mb-2"
+                                            value={data.thumbnail_url}
+                                            onChange={(e) => setData('thumbnail_url', e.target.value)}
+                                            placeholder="https://images.unsplash.com/..."
+                                        />
+                                        <p className="text-[10px] text-gray-400 leading-relaxed">
+                                            Paste a direct link to an image (jpg/png). <br/>
+                                            The preview on the left will update automatically.
+                                        </p>
+                                        {errors.thumbnail_url && <div className="text-red-500 text-xs mt-1 font-bold">{errors.thumbnail_url}</div>}
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className="flex items-center justify-between">
-                                <button
-                                    type="submit"
-                                    disabled={processing}
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                >
-                                    Create Subject
-                                </button>
+                            {/* ACTION BUTTONS */}
+                            <div className="flex items-center justify-end gap-4 pt-4 border-t border-gray-50 mt-6">
                                 <Link
                                     href={route('admin.subjects.index')}
-                                    className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+                                    className="px-6 py-3 rounded-2xl font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all"
                                 >
                                     Cancel
                                 </Link>
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="bg-[#145da0] hover:bg-[#0d4a80] text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-blue-100 transition-all transform active:scale-95 disabled:opacity-50"
+                                >
+                                    {processing ? 'Creating...' : 'Create Subject'}
+                                </button>
                             </div>
+
                         </form>
                     </div>
+
                 </div>
             </div>
         </AuthenticatedLayout>

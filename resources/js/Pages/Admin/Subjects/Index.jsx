@@ -5,50 +5,108 @@ export default function Index({ auth, subjects }) {
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Manage Subjects</h2>}
+            header={
+                <h2 className="font-black text-2xl text-[#145da0] leading-tight">
+                    Manage Subjects
+                </h2>
+            }
         >
             <Head title="Manage Subjects" />
 
-            <div className="py-12">
+            <div className="py-12 bg-[#f0f2f5] min-h-screen">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-lg font-bold">All Subjects</h3>
-                            <Link
-                                href={route('admin.subjects.create')}
-                                className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                            >
-                                Add New Subject
-                            </Link>
+                    
+                    {/* STATS / HEADER ACTION AREA */}
+                    <div className="flex justify-between items-center mb-8">
+                        <div>
+                            <h3 className="text-gray-500 font-bold text-sm uppercase tracking-widest">Administrator</h3>
+                            <p className="text-gray-400 text-xs">Manage your curriculum and student materials</p>
                         </div>
+                        <Link
+                            href={route('admin.subjects.create')}
+                            className="bg-[#145da0] hover:bg-[#0d4a80] text-white font-black py-4 px-8 rounded-2xl shadow-lg shadow-blue-100 transition-all transform active:scale-95 flex items-center gap-2"
+                        >
+                            <span className="text-xl">+</span> Add New Subject
+                        </Link>
+                    </div>
 
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Level</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {subjects.map((subject) => (
-                                    <tr key={subject.id}>
-                                        <td className="px-6 py-4 whitespace-nowrap">{subject.title}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{subject.level}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{subject.price}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <Link
-                                                href={route('admin.subjects.edit', subject.id)}
-                                                className="text-indigo-600 hover:text-indigo-900 mr-4"
-                                            >
-                                                Edit
-                                            </Link>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    {/* MAIN TABLE CARD */}
+                    <div className="bg-white overflow-hidden shadow-sm rounded-[2.5rem] border border-gray-100">
+                        <div className="p-8">
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full">
+                                    <thead>
+                                        <tr className="border-b-2 border-gray-50">
+                                            <th className="px-6 py-4 text-left text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Title</th>
+                                            <th className="px-6 py-4 text-left text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Level</th>
+                                            <th className="px-6 py-4 text-left text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Price</th>
+                                            <th className="px-6 py-4 text-right text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-50">
+                                        {subjects.map((subject) => (
+                                            <tr key={subject.id} className="hover:bg-blue-50/30 transition-colors group">
+                                                <td className="px-6 py-5">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-12 h-12 rounded-xl bg-gray-100 overflow-hidden flex-shrink-0 border border-gray-200">
+                                                            <img 
+                                                                src={subject.thumbnail_url} 
+                                                                className="w-full h-full object-cover"
+                                                                onError={(e) => e.target.src = "https://placehold.co/100x100?text=Pinar"}
+                                                            />
+                                                        </div>
+                                                        <span className="font-bold text-gray-700 group-hover:text-[#145da0] transition-colors">
+                                                            {subject.title}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-5">
+                                                    <span className="bg-[#ffd21f]/20 text-[#145da0] text-[10px] font-black px-3 py-1 rounded-lg uppercase">
+                                                        {subject.level}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-5">
+                                                    <span className="font-bold text-gray-600">
+                                                        IDR {subject.price.toLocaleString()}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-5 text-right">
+                                                    <div className="flex justify-end gap-2">
+                                                        <Link
+                                                            href={route('admin.subjects.edit', subject.id)}
+                                                            className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-blue-50 text-[#145da0] hover:bg-[#145da0] hover:text-white transition-all shadow-sm"
+                                                            title="Edit Subject"
+                                                        >
+                                                            ✎
+                                                        </Link>
+                                                        {/* Tambahkan tombol delete jika perlu */}
+                                                        <button 
+                                                            className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm"
+                                                            title="Delete Subject"
+                                                        >
+                                                            ✕
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {subjects.length === 0 && (
+                                <div className="text-center py-20">
+                                    <p className="text-gray-400 font-bold italic">No subjects available yet. Start by adding one!</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* FOOTER INFO */}
+                    <div className="mt-8 text-center">
+                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                            © 2026 Pinar Education Admin System
+                        </p>
                     </div>
                 </div>
             </div>

@@ -2,12 +2,13 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Edit({ auth, subject }) {
-    const { data, setData, put, processing, errors } = useForm({
-        title: subject.title,
-        description: subject.description,
-        level: subject.level,
-        price: subject.price,
-        thumbnail_url: subject.thumbnail_url || ''
+    // Inisialisasi form dengan data subject yang ada
+    const { data, setData, put, delete: destroy, processing, errors } = useForm({
+        title: subject.title || '',
+        description: subject.description || '',
+        level: subject.level || 'SD',
+        price: subject.price || 0,
+        thumbnail_url: subject.thumbnail_url || '',
     });
 
     const submit = (e) => {
@@ -15,194 +16,176 @@ export default function Edit({ auth, subject }) {
         put(route('admin.subjects.update', subject.id));
     };
 
+    const handleDelete = (e) => {
+        e.preventDefault();
+        if (confirm('Are you sure you want to delete this subject? This action cannot be undone.')) {
+            destroy(route('admin.subjects.destroy', subject.id));
+        }
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Edit Subject: {subject.title}</h2>}
+            header={
+                <div className="flex flex-col">
+                    <h2 className="text-2xl font-bold text-[#145da0] tracking-tight">Edit Subject</h2>
+                </div>
+            }
         >
             <Head title={`Edit ${subject.title}`} />
 
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                    {/* Subject Edit Form */}
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-lg font-bold">Subject Details</h3>
+            <div className="py-12 bg-[#f0f2f5] min-h-screen">
+                <div className="max-w-4xl mx-auto px-6 lg:px-8">
+                    
+                    {/* BACK BUTTON (Konsisten dengan halaman lain) */}
+                    <div className="mb-8">
+                        <Link
+                            href={route("admin.subjects.index")}
+                            className="inline-flex items-center text-gray-400 font-semibold hover:text-[#145da0] transition-colors"
+                        >
+                            <span className="mr-2 transform group-hover:-translate-x-1 transition-transform">←</span> 
+                            Back to Managements
+                        </Link>
+                    </div>
+
+                    {/* FORM CARD */}
+                    <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden">
+                        
+                        {/* Header Card */}
+                        <div className="bg-blue-50/50 px-8 py-6 border-b border-gray-100 flex justify-between items-center">
+                            <div>
+                                <h3 className="text-lg font-bold text-gray-800">Subject Details</h3>
+                                <p className="text-sm text-gray-500">Editing ID: #{subject.id}</p>
+                            </div>
+                            <button
+                                onClick={handleDelete}
+                                className="text-sm text-red-500 font-bold hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-xl transition-all"
+                            >
+                                Delete Subject
+                            </button>
                         </div>
-                        <form onSubmit={submit}>
-                            {/* Same fields as create, but populated */}
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">Title</label>
+
+                        <form onSubmit={submit} className="p-8 space-y-6">
+                            
+                            {/* TITLE INPUT */}
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Subject Title</label>
                                 <input
                                     type="text"
+                                    className="w-full rounded-2xl border-gray-200 focus:border-[#145da0] focus:ring-[#145da0] py-3 px-4 font-semibold text-gray-800 bg-gray-50/50 transition-all"
                                     value={data.title}
                                     onChange={(e) => setData('title', e.target.value)}
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    placeholder="e.g. Mathematics"
                                 />
-                                {errors.title && <div className="text-red-500 text-xs mt-1">{errors.title}</div>}
+                                {errors.title && <div className="text-red-500 text-xs mt-1 font-bold">{errors.title}</div>}
                             </div>
 
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                            {/* DESCRIPTION INPUT */}
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Description</label>
                                 <textarea
+                                    rows="4"
+                                    className="w-full rounded-2xl border-gray-200 focus:border-[#145da0] focus:ring-[#145da0] py-3 px-4 text-gray-700 bg-gray-50/50 transition-all resize-none"
                                     value={data.description}
                                     onChange={(e) => setData('description', e.target.value)}
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    placeholder="Explain what students will learn..."
                                 />
-                                {errors.description && <div className="text-red-500 text-xs mt-1">{errors.description}</div>}
+                                {errors.description && <div className="text-red-500 text-xs mt-1 font-bold">{errors.description}</div>}
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4 mb-4">
+                            {/* GRID: PRICE & LEVEL */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Price */}
                                 <div>
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">Level</label>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Price (IDR)</label>
+                                    <div className="relative">
+                                        <span className="absolute left-4 top-3.5 text-gray-400 font-bold text-sm">Rp</span>
+                                        <input
+                                            type="number"
+                                            className="w-full rounded-2xl border-gray-200 focus:border-[#145da0] focus:ring-[#145da0] py-3 pl-10 pr-4 font-bold text-gray-800 bg-gray-50/50 transition-all"
+                                            value={data.price}
+                                            onChange={(e) => setData('price', e.target.value)}
+                                        />
+                                    </div>
+                                    {errors.price && <div className="text-red-500 text-xs mt-1 font-bold">{errors.price}</div>}
+                                </div>
+
+                                {/* Level */}
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Education Level</label>
                                     <select
+                                        className="w-full rounded-2xl border-gray-200 focus:border-[#145da0] focus:ring-[#145da0] py-3 px-4 font-bold text-gray-700 bg-gray-50/50 transition-all"
                                         value={data.level}
                                         onChange={(e) => setData('level', e.target.value)}
-                                        className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     >
-                                        <option value="Beginner">Beginner</option>
-                                        <option value="Intermediate">Intermediate</option>
-                                        <option value="Advanced">Advanced</option>
+                                        <option value="SD">SD (Elementary)</option>
+                                        <option value="SMP">SMP (Junior High)</option>
+                                        <option value="SMA">SMA (High School)</option>
+                                        <option value="Umum">Umum (General)</option>
                                     </select>
-                                    {errors.level && <div className="text-red-500 text-xs mt-1">{errors.level}</div>}
-                                </div>
-                                <div>
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">Price</label>
-                                    <input
-                                        type="number"
-                                        value={data.price}
-                                        onChange={(e) => setData('price', e.target.value)}
-                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    />
-                                    {errors.price && <div className="text-red-500 text-xs mt-1">{errors.price}</div>}
+                                    {errors.level && <div className="text-red-500 text-xs mt-1 font-bold">{errors.level}</div>}
                                 </div>
                             </div>
 
-                            <div className="mb-6">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">Thumbnail URL</label>
-                                <input
-                                    type="text"
-                                    value={data.thumbnail_url}
-                                    onChange={(e) => setData('thumbnail_url', e.target.value)}
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    placeholder="https://"
-                                />
-                                {errors.thumbnail_url && <div className="text-red-500 text-xs mt-1">{errors.thumbnail_url}</div>}
+                            {/* THUMBNAIL URL & PREVIEW */}
+                            <div className="bg-gray-50 p-6 rounded-[1.5rem] border border-gray-100">
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Thumbnail Image</label>
+                                
+                                <div className="flex flex-col md:flex-row gap-6 items-start">
+                                    {/* Preview Box */}
+                                    <div className="w-full md:w-1/3 flex-shrink-0">
+                                        <div className="aspect-video rounded-xl overflow-hidden bg-gray-200 border-2 border-dashed border-gray-300 relative group">
+                                            {data.thumbnail_url ? (
+                                                <img 
+                                                    src={data.thumbnail_url} 
+                                                    alt="Preview" 
+                                                    className="w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        e.target.onerror = null;
+                                                        e.target.src = "https://placehold.co/600x400?text=Invalid+Link";
+                                                    }}
+                                                />
+                                            ) : (
+                                                <div className="flex items-center justify-center h-full text-gray-400 text-xs font-bold">No Image</div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Input URL */}
+                                    <div className="w-full md:w-2/3">
+                                        <input
+                                            type="text"
+                                            className="w-full rounded-2xl border-gray-200 focus:border-[#145da0] focus:ring-[#145da0] py-3 px-4 text-sm text-gray-600 bg-white transition-all mb-2"
+                                            value={data.thumbnail_url}
+                                            onChange={(e) => setData('thumbnail_url', e.target.value)}
+                                            placeholder="https://images.unsplash.com/..."
+                                        />
+                                        <p className="text-[10px] text-gray-400 leading-relaxed">
+                                            Tip: Use direct image links ending in .jpg or .png. <br/>
+                                            Recommended: Unsplash or standard image hosting.
+                                        </p>
+                                        {errors.thumbnail_url && <div className="text-red-500 text-xs mt-1 font-bold">{errors.thumbnail_url}</div>}
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className="flex items-center justify-between">
+                            {/* ACTION BUTTONS */}
+                            <div className="flex items-center justify-end gap-4 pt-4 border-t border-gray-50 mt-6">
+                                <Link
+                                    href={route('admin.subjects.index')}
+                                    className="px-6 py-3 rounded-2xl font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all"
+                                >
+                                    Cancel
+                                </Link>
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    className="bg-[#145da0] hover:bg-[#0d4a80] text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-blue-100 transition-all transform active:scale-95 disabled:opacity-50"
                                 >
-                                    Update Subject
+                                    {processing ? 'Saving Changes...' : 'Save Updates'}
                                 </button>
-
-                                <Link
-                                    href={route('admin.subjects.index')}
-                                    className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-                                >
-                                    Back to List
-                                </Link>
                             </div>
                         </form>
-                    </div>
-
-                    {/* Lessons Management */}
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-lg font-bold">Lessons</h3>
-                            <Link
-                                href={route('admin.lessons.create', subject.id)}
-                                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm"
-                            >
-                                Add Lesson
-                            </Link>
-                        </div>
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sequence</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {subject.lessons && subject.lessons.length > 0 ? (
-                                    subject.lessons.map((lesson) => (
-                                        <tr key={lesson.id}>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{lesson.sequence}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{lesson.title}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <Link href={route('admin.lessons.edit', lesson.id)} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</Link>
-                                                <button
-                                                    onClick={() => {
-                                                        if (confirm('Are you sure you want to delete this lesson?')) {
-                                                            // Inertia delete
-                                                            console.log('Delete logic to be implemented via router.delete or form');
-                                                            // We'll fix this in the next step to use proper routing
-                                                            alert('Use the edit page to delete for now, or implement direct delete.');
-                                                        }
-                                                    }}
-                                                    className="text-red-600 hover:text-red-900"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="3" className="px-6 py-4 text-center text-gray-500">No lessons found.</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {/* Quizzes Management */}
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-lg font-bold">Quizzes</h3>
-                            <Link
-                                href={route('admin.quizzes.create', subject.id)}
-                                className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-sm"
-                            >
-                                Add Quiz
-                            </Link>
-                        </div>
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time Limit</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {subject.quizzes && subject.quizzes.length > 0 ? (
-                                    subject.quizzes.map((quiz) => (
-                                        <tr key={quiz.id}>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{quiz.title}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{quiz.time_limit} mins</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <Link href={route('admin.quizzes.edit', quiz.id)} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit (Add Questions)</Link>
-                                                <button
-                                                    className="text-red-600 hover:text-red-900"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="3" className="px-6 py-4 text-center text-gray-500">No quizzes found.</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
