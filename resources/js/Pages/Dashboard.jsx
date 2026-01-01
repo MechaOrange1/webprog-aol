@@ -9,63 +9,109 @@ export default function Dashboard({
 }) {
     const [searchQuery, setSearchQuery] = useState("");
 
+    /* ================= TIME BASED GREETING & THEME ================= */
+
+    const hour = new Date().getHours();
+
     const getGreeting = () => {
-        const hour = new Date().getHours();
         if (hour >= 5 && hour < 11) return "🌞 Good Morning";
         if (hour >= 11 && hour < 15) return "☀️ Good Afternoon";
         if (hour >= 15 && hour < 18) return "🌤️ Good Evening";
         return "🌙 Good Night";
     };
 
-    const getSubjectIcon = (title) => {
-        const t = title.toLowerCase();
-        if (t.includes("matematika")) return "🔢";
-        if (t.includes("bahasa")) return "📝";
-        if (t.includes("english") || t.includes("inggris")) return "🇺🇸";
-        if (t.includes("ipa") || t.includes("sains")) return "🔬";
-        if (t.includes("fisika")) return "⚡";
-        if (t.includes("kimia")) return "🧪";
-        if (t.includes("biologi")) return "🧬";
-        return "📚";
+    const getHeaderTheme = () => {
+        if (hour >= 5 && hour < 11) {
+            return {
+                gradient: "from-[#56ccf2] via-[#2f80ed] to-[#f2c94c]",
+                blob: "bg-white/20",
+            };
+        }
+
+        if (hour >= 11 && hour < 15) {
+            return {
+                gradient: "from-[#145da0] via-[#4f8ea6] to-[#ffd21f]",
+                blob: "bg-white/15",
+            };
+        }
+
+        if (hour >= 15 && hour < 18) {
+            return {
+                gradient: "from-[#ff7e5f] via-[#feb47b] to-[#ffd194]",
+                blob: "bg-white/20",
+            };
+        }
+
+        return {
+            gradient: "from-[#0f2027] via-[#203a43] to-[#2c5364]",
+            blob: "bg-white/10",
+        };
     };
+
+    const theme = getHeaderTheme();
+
+    /* ================= SEARCH ================= */
 
     const filteredSubjects = searchQuery
         ? allSubjects.filter((s) =>
-            s.title.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+              s.title.toLowerCase().includes(searchQuery.toLowerCase())
+          )
         : [];
 
     return (
         <AuthenticatedLayout>
-            <Head title="Dashboard" />
+            <Head>
+                <title>Dashboard</title>
+                <link
+                    rel="icon"
+                    type="image/png"
+                    href="/img/PintarEduCharacterLogo.png"
+                />
+            </Head>
 
-            {/* HERO */}
-            <section className="bg-gradient-to-r from-[#145da0] via-[#6fa3a1] to-[#ffd21f] text-white pb-44">
-                <div className="max-w-7xl mx-auto px-6 pt-16 text-center">
+            {/* ================= INTERACTIVE HEADER ================= */}
+            <section className="relative overflow-hidden">
+                {/* GRADIENT */}
+                <div
+                    className={`absolute inset-0 bg-gradient-to-br ${theme.gradient}`}
+                />
+
+                {/* FLOATING BLOBS */}
+                <div
+                    className={`absolute -top-32 -left-32 w-[28rem] h-[28rem] ${theme.blob} rounded-full blur-3xl animate-float-slow`}
+                />
+                <div
+                    className={`absolute top-1/3 -right-40 w-[32rem] h-[32rem] ${theme.blob} rounded-full blur-3xl animate-float-fast`}
+                />
+
+                {/* CONTENT */}
+                <div className="relative max-w-7xl mx-auto px-6 py-28 text-white">
                     <p className="text-lg opacity-90">{getGreeting()},</p>
-                    <h1 className="text-4xl font-bold mt-2">
+
+                    <h1 className="text-4xl md:text-5xl font-extrabold mt-2">
                         {auth.user.name}
                     </h1>
-                    <p className="mt-4 opacity-90">
-                        Temukan mata pelajaran baru dan lanjutkan belajarmu 📚
+
+                    <p className="mt-4 opacity-90 max-w-2xl">
+                        Temukan materi baru, lanjutkan pembelajaran, dan bangun
+                        konsistensi belajarmu hari ini.
                     </p>
 
-                    {/* SEARCH BAR */}
-                    <div className="relative mt-10 max-w-4xl mx-auto">
+                    {/* SEARCH */}
+                    <div className="relative mt-10 max-w-3xl">
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Cari mata pelajaran atau materi pembelajaran..."
-                            className="w-full px-8 py-5 rounded-2xl text-gray-800 shadow-xl focus:ring-4 focus:ring-blue-500 outline-none"
+                            className="w-full px-6 py-4 rounded-xl text-gray-800 shadow-xl focus:ring-4 focus:ring-white/40 outline-none"
                         />
-                        <span className="absolute right-6 top-1/2 -translate-y-1/2 text-xl">
+                        <span className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500">
                             🔍
                         </span>
 
-                        {/* SEARCH RESULT */}
                         {searchQuery && (
-                            <div className="absolute left-0 right-0 mt-3 bg-white rounded-2xl shadow-xl z-50 text-left">
+                            <div className="absolute left-0 right-0 mt-2 bg-white rounded-xl shadow-lg z-50">
                                 {filteredSubjects.length > 0 ? (
                                     filteredSubjects.map((subject) => (
                                         <Link
@@ -74,19 +120,14 @@ export default function Dashboard({
                                                 "subjects.show",
                                                 subject.id
                                             )}
-                                            className="flex items-center gap-4 px-6 py-4 hover:bg-gray-100 transition"
+                                            className="block px-6 py-4 hover:bg-gray-100 transition"
                                         >
-                                            <span className="text-2xl">
-                                                {getSubjectIcon(subject.title)}
-                                            </span>
-                                            <div>
-                                                <p className="font-semibold text-gray-800">
-                                                    {subject.title}
-                                                </p>
-                                                <p className="text-sm text-gray-500">
-                                                    {subject.description}
-                                                </p>
-                                            </div>
+                                            <p className="font-medium text-gray-900">
+                                                {subject.title}
+                                            </p>
+                                            <p className="text-sm text-gray-500">
+                                                {subject.description}
+                                            </p>
                                         </Link>
                                     ))
                                 ) : (
@@ -100,82 +141,105 @@ export default function Dashboard({
                 </div>
             </section>
 
-            {/* QUICK MENU */}
-            <section className="-mt-28 relative z-10">
-                <div className="max-w-7xl mx-auto px-6 flex justify-center gap-6">
-                    <MenuCard
-                        title="Student Dashboard"
-                        desc="Lihat progres dan pencapaianmu"
-                        href={route("student-dashboard")}
-                        icon="🎓"
+            {/* ================= QUICK MENU ================= */}
+            <section className="-mt-14 relative z-10">
+                <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <QuickLink
+                        title="⭐Recommendations"
+                        desc="Langsung ke materi pilihan"
+                        href="#recommended"
                     />
-                    <MenuCard
-                        title="All Subjects"
-                        desc="Jelajahi semua materi"
+                    <QuickLink
+                        title="🎓 Student Dashboard"
+                        desc="Lihat progres & aktivitas belajarmu"
+                        href={route("student-dashboard")}
+                    />
+                    <QuickLink
+                        title="📚 All Subjects"
+                        desc="Jelajahi seluruh materi pembelajaran"
                         href={route("subjects.index")}
-                        icon="📚"
                     />
                 </div>
             </section>
 
-            {/* RECOMMENDED */}
-            <section className="mt-24 bg-gray-50 py-16">
+            {/* ================= RECOMMENDED (UNCHANGED) ================= */}
+            <section
+                id="recommended"
+                className="bg-[#f0f2f5] py-20 scroll-mt-24"
+            >
                 <div className="max-w-7xl mx-auto px-6">
-                    <h2 className="text-2xl font-bold mb-8">
-                        Rekomendasi untuk Anda
-                    </h2>
+                    <div className="mb-10">
+                        <h2 className="text-2xl font-bold text-gray-900">
+                            Rekomendasi untuk Anda
+                        </h2>
+                        <p className="text-gray-500 mt-2">
+                            Pilihan materi terbaik berdasarkan aktivitas
+                            belajarmu
+                        </p>
+                    </div>
 
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {recommendedSubjects.map((s) => (
-                            <Link
-                                key={s.id}
-                                href={route("subjects.show", s.id)}
-                                className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition"
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {recommendedSubjects.map((subject) => (
+                            <div
+                                key={subject.id}
+                                className="group bg-white rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col border border-gray-100"
                             >
-                                <div className="text-3xl mb-3">
-                                    {getSubjectIcon(s.title)}
+                                <div className="relative h-52 overflow-hidden bg-gray-200">
+                                    <img
+                                        src={subject.thumbnail_url}
+                                        alt={subject.title}
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        onError={(e) => {
+                                            e.target.src =
+                                                "https://placehold.co/600x400?text=Pintar+Education";
+                                        }}
+                                    />
+                                    <div className="absolute top-4 left-4">
+                                        <span className="bg-[#ffd21f] text-[#145da0] text-[10px] font-black px-3 py-1 rounded-lg uppercase shadow-sm">
+                                            Recommended
+                                        </span>
+                                    </div>
                                 </div>
-                                <h3 className="font-bold text-lg">{s.title}</h3>
-                                <p className="text-sm text-gray-500 mt-1">
-                                    {s.description}
-                                </p>
-                            </Link>
+
+                                <div className="p-7 flex flex-col flex-1">
+                                    <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-[#145da0] transition-colors">
+                                        {subject.title}
+                                    </h3>
+
+                                    <p className="text-sm text-gray-500 mb-6 line-clamp-2">
+                                        {subject.description}
+                                    </p>
+
+                                    <Link
+                                        href={route(
+                                            "subjects.show",
+                                            subject.id
+                                        )}
+                                        className="mt-auto inline-flex items-center justify-center w-full py-3 rounded-2xl font-bold bg-[#145da0] text-white hover:bg-[#0d4a80] transition shadow-md"
+                                    >
+                                        Lihat Materi
+                                        <span className="ml-2">→</span>
+                                    </Link>
+                                </div>
+                            </div>
                         ))}
                     </div>
-                </div>
-            </section>
-
-            {/* CTA */}
-            <section className="py-16">
-                <div className="mx-auto max-w-4xl px-6 text-center">
-                    <h2 className="text-3xl font-bold mb-4">
-                        Siap untuk melanjutkan belajar?
-                    </h2>
-                    <p className="text-white mb-6">
-                        Lacak progress dan lanjutkan pelajaran kapan saja
-                    </p>
-                    <Link
-                        href={route("student-dashboard")}
-                        className="inline-block bg-[#145da0] text-white px-8 py-4 rounded-xl shadow hover:bg-[#0f4c81] transition"
-                    >
-                        Ke Dashboard Siswa →
-                    </Link>
                 </div>
             </section>
         </AuthenticatedLayout>
     );
 }
 
-/* COMPONENT */
-function MenuCard({ title, desc, href, icon }) {
+/* ================= COMPONENT ================= */
+
+function QuickLink({ title, desc, href }) {
     return (
         <Link
             href={href}
-            className="w-72 bg-white rounded-2xl p-6 shadow-xl hover:-translate-y-1 transition"
+            className="bg-white rounded-xl border p-6 hover:shadow-lg hover:-translate-y-1 transition"
         >
-            <div className="text-4xl mb-4">{icon}</div>
-            <h3 className="font-bold text-lg">{title}</h3>
-            <p className="text-sm text-gray-500">{desc}</p>
+            <h3 className="font-semibold text-gray-900">{title}</h3>
+            <p className="text-sm text-gray-500 mt-1">{desc}</p>
         </Link>
     );
 }
