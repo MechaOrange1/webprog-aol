@@ -52,6 +52,18 @@ export default function Show({ auth, quiz }) {
         <AuthenticatedLayout user={auth.user}>
             <Head title={quiz.title} />
 
+            <div>
+                <Link
+                    href={route("subjects.index")}
+                    className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-[#145da0] transition-all group"
+                >
+                    <span className="mr-3 bg-white w-9 h-9 flex items-center justify-center rounded-xl shadow-sm group-hover:bg-[#145da0] group-hover:text-white transition-all transform group-hover:-translate-x-1">
+                        ←
+                    </span> 
+                    Back to Management
+                </Link>
+            </div>
+
             <div className="py-12 bg-[#f0f2f5] min-h-screen">
                 <div className="max-w-4xl mx-auto sm:px-6 lg:px-8">
 

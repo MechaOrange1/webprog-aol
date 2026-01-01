@@ -1,7 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function Edit({ auth, subject }) {
+export default function Edit({ auth, subject, lessons = [], quizzes = [] }) {
     // Inisialisasi form dengan data subject yang ada
     const { data, setData, put, delete: destroy, processing, errors } = useForm({
         title: subject.title || '',
@@ -28,34 +28,34 @@ export default function Edit({ auth, subject }) {
             user={auth.user}
             header={
                 <div className="flex flex-col">
-                    <h2 className="text-2xl font-bold text-[#145da0] tracking-tight">Edit Subject</h2>
+                    <h2 className="text-2xl font-bold text-[#145da0] tracking-tight">Edit {subject.title}</h2>
                 </div>
             }
         >
             <Head title={`Edit ${subject.title}`} />
 
             <div className="py-12 bg-[#f0f2f5] min-h-screen">
-                <div className="max-w-4xl mx-auto px-6 lg:px-8">
+                <div className="max-w-4xl mx-auto px-6 lg:px-8 space-y-8">
                     
-                    {/* BACK BUTTON (Konsisten dengan halaman lain) */}
-                    <div className="mb-8">
+                    {/* BACK BUTTON */}
+                    <div>
                         <Link
                             href={route("admin.subjects.index")}
-                            className="inline-flex items-center text-gray-400 font-semibold hover:text-[#145da0] transition-colors"
+                            className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-[#145da0] transition-all group"
                         >
-                            <span className="mr-2 transform group-hover:-translate-x-1 transition-transform">←</span> 
-                            Back to Managements
+                            <span className="mr-3 bg-white w-9 h-9 flex items-center justify-center rounded-xl shadow-sm group-hover:bg-[#145da0] group-hover:text-white transition-all transform group-hover:-translate-x-1">
+                                ←
+                            </span> 
+                            Back to Management
                         </Link>
                     </div>
 
-                    {/* FORM CARD */}
+                    {/* FORM CARD (DATA UTAMA) */}
                     <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden">
-                        
-                        {/* Header Card */}
                         <div className="bg-blue-50/50 px-8 py-6 border-b border-gray-100 flex justify-between items-center">
                             <div>
                                 <h3 className="text-lg font-bold text-gray-800">Subject Details</h3>
-                                <p className="text-sm text-gray-500">Editing ID: #{subject.id}</p>
+                                <p className="text-sm text-gray-500">Editing {subject.title}</p>
                             </div>
                             <button
                                 onClick={handleDelete}
@@ -66,8 +66,6 @@ export default function Edit({ auth, subject }) {
                         </div>
 
                         <form onSubmit={submit} className="p-8 space-y-6">
-                            
-                            {/* TITLE INPUT */}
                             <div>
                                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Subject Title</label>
                                 <input
@@ -80,7 +78,6 @@ export default function Edit({ auth, subject }) {
                                 {errors.title && <div className="text-red-500 text-xs mt-1 font-bold">{errors.title}</div>}
                             </div>
 
-                            {/* DESCRIPTION INPUT */}
                             <div>
                                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Description</label>
                                 <textarea
@@ -93,9 +90,7 @@ export default function Edit({ auth, subject }) {
                                 {errors.description && <div className="text-red-500 text-xs mt-1 font-bold">{errors.description}</div>}
                             </div>
 
-                            {/* GRID: PRICE & LEVEL */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {/* Price */}
                                 <div>
                                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Price (IDR)</label>
                                     <div className="relative">
@@ -109,8 +104,6 @@ export default function Edit({ auth, subject }) {
                                     </div>
                                     {errors.price && <div className="text-red-500 text-xs mt-1 font-bold">{errors.price}</div>}
                                 </div>
-
-                                {/* Level */}
                                 <div>
                                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Education Level</label>
                                     <select
@@ -127,12 +120,9 @@ export default function Edit({ auth, subject }) {
                                 </div>
                             </div>
 
-                            {/* THUMBNAIL URL & PREVIEW */}
                             <div className="bg-gray-50 p-6 rounded-[1.5rem] border border-gray-100">
                                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Thumbnail Image</label>
-                                
                                 <div className="flex flex-col md:flex-row gap-6 items-start">
-                                    {/* Preview Box */}
                                     <div className="w-full md:w-1/3 flex-shrink-0">
                                         <div className="aspect-video rounded-xl overflow-hidden bg-gray-200 border-2 border-dashed border-gray-300 relative group">
                                             {data.thumbnail_url ? (
@@ -150,8 +140,6 @@ export default function Edit({ auth, subject }) {
                                             )}
                                         </div>
                                     </div>
-
-                                    {/* Input URL */}
                                     <div className="w-full md:w-2/3">
                                         <input
                                             type="text"
@@ -161,15 +149,13 @@ export default function Edit({ auth, subject }) {
                                             placeholder="https://images.unsplash.com/..."
                                         />
                                         <p className="text-[10px] text-gray-400 leading-relaxed">
-                                            Tip: Use direct image links ending in .jpg or .png. <br/>
-                                            Recommended: Unsplash or standard image hosting.
+                                            Tip: Use direct image links ending in .jpg or .png.
                                         </p>
                                         {errors.thumbnail_url && <div className="text-red-500 text-xs mt-1 font-bold">{errors.thumbnail_url}</div>}
                                     </div>
                                 </div>
                             </div>
 
-                            {/* ACTION BUTTONS */}
                             <div className="flex items-center justify-end gap-4 pt-4 border-t border-gray-50 mt-6">
                                 <Link
                                     href={route('admin.subjects.index')}
@@ -187,6 +173,80 @@ export default function Edit({ auth, subject }) {
                             </div>
                         </form>
                     </div>
+
+                    {/* SECTION: LESSONS (Kurikulum) */}
+                    <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden mt-8">
+                        <div className="bg-blue-50/50 px-8 py-6 border-b border-gray-100 flex justify-between items-center">
+                            <h3 className="text-lg font-bold text-gray-800">Curriculum / Lessons</h3>
+                            <Link 
+                                href={route('admin.lessons.create', { subject: subject.id })}
+                                className="bg-[#145da0] text-white text-xs font-bold py-2 px-4 rounded-xl shadow-md hover:bg-[#0d4a80] transition-all"
+                            >
+                                + Add Lesson
+                            </Link>
+                        </div>
+                        <div className="p-8">
+                            <div className="space-y-3">
+                                {lessons.length > 0 ? (
+                                    lessons.map((lsn) => (
+                                        <div key={lsn.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:bg-blue-50 transition-colors">
+                                            <div className="flex items-center gap-4">
+                                                <span className="font-bold text-[#145da0] w-6 text-center">{lsn.sequence}</span>
+                                                <h4 className="font-bold text-gray-800">{lsn.title}</h4>
+                                            </div>
+                                            <Link 
+                                                href={route('admin.lessons.edit', lsn.id)}
+                                                className="text-xs font-bold text-[#145da0] hover:underline"
+                                            >
+                                                Edit Content
+                                            </Link>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="text-center py-6">
+                                        <p className="text-gray-400 italic">No lessons yet.</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* SECTION: QUIZZES */}
+                    <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden mt-8">
+                        <div className="bg-blue-50/50 px-8 py-6 border-b border-gray-100 flex justify-between items-center">
+                            <h3 className="text-lg font-bold text-gray-800">Final Quizzes</h3>
+                            <Link 
+                                href={route('admin.quizzes.create', { subject: subject.id })}
+                                className="bg-[#145da0] text-white text-xs font-bold py-2 px-4 rounded-xl shadow-md hover:bg-[#0d4a80] transition-all"
+                            >
+                                + Add Quiz
+                            </Link>
+                        </div>
+                        <div className="p-8">
+                            <div className="space-y-3">
+                                {quizzes.length > 0 ? (
+                                    quizzes.map((quiz) => (
+                                        <div key={quiz.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:bg-blue-50 transition-colors">
+                                            <div className="flex items-center gap-4">
+                                                <h4 className="font-bold text-gray-800">{quiz.title}</h4>
+                                            </div>
+                                            <Link 
+                                                href={route('admin.quizzes.edit', quiz.id)}
+                                                className="text-xs font-bold text-[#145da0] hover:underline"
+                                            >
+                                                Edit Quiz
+                                            </Link>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="text-center py-6">
+                                        <p className="text-gray-400 italic">No quizzes yet.</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </AuthenticatedLayout>

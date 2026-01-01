@@ -22,7 +22,6 @@ public function index()
             'thumbnail_url' => $subject->thumbnail_url,
             'level' => $subject->level,
             'price' => $subject->price,
-            // Cek apakah user sudah enroll di subject ini
             'is_enrolled' => $user ? $user->enrollments()->where('subject_id', $subject->id)->exists() : false,
         ];
     });

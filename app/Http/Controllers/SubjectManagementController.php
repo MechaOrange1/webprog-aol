@@ -37,10 +37,12 @@ class SubjectManagementController extends Controller
 
     public function edit(Subject $subject)
     {
-        $subject->load(['lessons', 'quizzes']);
+        $lessons = $subject->lessons()->orderBy('sequence', 'asc')->get();
 
         return Inertia::render('Admin/Subjects/Edit', [
             'subject' => $subject,
+            'lessons' => $subject->lessons()->orderBy('sequence', 'asc')->get(),
+            'quizzes' => $subject->quizzes,
         ]);
     }
 

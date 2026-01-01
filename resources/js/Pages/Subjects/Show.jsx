@@ -23,13 +23,15 @@ export default function Show({ auth, subject, lessons, quizzes, isEnrolled, comp
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         
                     {/* TOMBOL BACK DI ATAS */}
-                    <div className="mb-8">
+                    <div>
                         <Link
                             href={route("subjects.index")}
-                            className="inline-flex items-center text-gray-400 font-semibold hover:text-[#145da0] transition-colors"
+                            className="mb-4 inline-flex items-center text-sm font-bold text-gray-500 hover:text-[#145da0] transition-all group"
                         >
-                            <span className="mr-2 transform group-hover:-translate-x-1 transition-transform">←</span> 
-                            Back to Subjects
+                            <span className="mr-3 bg-white w-9 h-9 flex items-center justify-center rounded-xl shadow-sm group-hover:bg-[#145da0] group-hover:text-white transition-all transform group-hover:-translate-x-1">
+                                ←
+                            </span> 
+                            Back to Subject List
                         </Link>
                     </div>
 

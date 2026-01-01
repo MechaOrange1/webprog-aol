@@ -102,7 +102,6 @@ export default function Index({ auth, subjects }) {
                         </div>
                     </div>
 
-                    {/* FOOTER INFO */}
                     <div className="mt-8 text-center">
                         <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
                             © 2026 Pinar Education Admin System

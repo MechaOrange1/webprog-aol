@@ -30,13 +30,15 @@ export default function Create({ auth }) {
                 <div className="max-w-4xl mx-auto px-6 lg:px-8">
                     
                     {/* BACK BUTTON */}
-                    <div className="mb-8">
+                    <div>
                         <Link
                             href={route("admin.subjects.index")}
-                            className="inline-flex items-center text-gray-400 font-semibold hover:text-[#145da0] transition-colors"
+                            className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-[#145da0] transition-all group"
                         >
-                            <span className="mr-2 transform group-hover:-translate-x-1 transition-transform">←</span> 
-                            Back to Managements
+                            <span className="mr-3 bg-white w-9 h-9 flex items-center justify-center rounded-xl shadow-sm group-hover:bg-[#145da0] group-hover:text-white transition-all transform group-hover:-translate-x-1">
+                                ←
+                            </span> 
+                            Back to Management
                         </Link>
                     </div>
 

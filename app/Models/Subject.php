@@ -23,7 +23,7 @@ class Subject extends Model
         return $this->hasMany(Lesson::class);
     }
 
-    public function quizzes(): HasMany
+    public function quizzes()
     {
         return $this->hasMany(Quiz::class);
     }
