@@ -10,9 +10,8 @@ export default function StudentDashboard({
     return (
         <AuthenticatedLayout>
             <Head title="Student Dashboard" />
-            
 
-            <div className="py-12 bg-gray-50 min-h-screen">
+            <div className="py-12 min-h-screen bg-[#d9d9d9]">
                 <div className="max-w-7xl mx-auto px-6 space-y-10">
                     {/* ================= HEADER ================= */}
                     <section className="bg-white rounded-2xl shadow p-8">
