@@ -32,7 +32,21 @@ export default function Show({ auth, lesson, isCompleted }) {
                                 {lesson.video_url ? (
                                     <div className="aspect-video rounded-xl overflow-hidden bg-black">
                                         <iframe
-                                            src={lesson.video_url}
+                                            src={(() => {
+                                                const url = lesson.video_url;
+                                                // Handle standard YouTube watch URLs
+                                                if (url.includes('youtube.com/watch')) {
+                                                    const videoId = new URLSearchParams(new URL(url).search).get('v');
+                                                    return `https://www.youtube.com/embed/${videoId}`;
+                                                }
+                                                // Handle youtu.be short URLs
+                                                if (url.includes('youtu.be/')) {
+                                                    const videoId = url.split('youtu.be/')[1].split('?')[0];
+                                                    return `https://www.youtube.com/embed/${videoId}`;
+                                                }
+                                                // Return original if it seems like an embed or other URL
+                                                return url;
+                                            })()}
                                             title={lesson.title}
                                             className="w-full h-full"
                                             allowFullScreen

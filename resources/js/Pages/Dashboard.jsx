@@ -1,7 +1,7 @@
 import { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
-import "../../css/headergradient.css"; // Pastikan path sesuai folder css
+import "../../css/HeaderGradient.css"; // Pastikan path sesuai folder css
 
 export default function Dashboard({
     auth,
@@ -47,8 +47,8 @@ export default function Dashboard({
     // ================= SEARCH =================
     const filteredSubjects = searchQuery
         ? allSubjects.filter((s) =>
-              s.title.toLowerCase().includes(searchQuery.toLowerCase())
-          )
+            s.title.toLowerCase().includes(searchQuery.toLowerCase())
+        )
         : [];
 
     return (
@@ -185,8 +185,8 @@ export default function Dashboard({
                                             alt={subject.title}
                                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                             onError={(e) =>
-                                                (e.target.src =
-                                                    "https://placehold.co/600x400?text=Pintar+Education")
+                                            (e.target.src =
+                                                "https://placehold.co/600x400?text=Pintar+Education")
                                             }
                                         />
                                         {subject.level && (

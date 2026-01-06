@@ -32,7 +32,7 @@ export default function Login({ status, canResetPassword }) {
             <div className="fixed inset-0 flex items-center justify-center bg-[#f9f9f9] z-[50] p-4">
                 <div className="flex flex-col md:flex-row w-full max-w-4xl h-auto md:h-[550px] bg-white rounded-[2rem] shadow-2xl overflow-hidden">
                     <div className="relative w-full md:w-5/12 bg-[#ffffff] flex flex-col justify-center items-center text-white p-12 text-center overflow-hidden">
-                        <div className="absolute -right-16 top-0 bottom-0 w-32 bg-[#d9d9d9] rounded-[50%] hidden md:block scale-y-150 transform translate-x-4"></div>  
+                        <div className="absolute -right-16 top-0 bottom-0 w-32 bg-[#d9d9d9] rounded-[50%] hidden md:block scale-y-150 transform translate-x-4 pointer-events-none"></div>
                         <div className="relative z-10">
                             <img src="/img/logo.png" alt="Pintaredication Logo" />
                             <h2 className="text-3xl font-bold mb-2 text-[#145da0]">Hello, Welcome!</h2>

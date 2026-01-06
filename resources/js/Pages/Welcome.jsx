@@ -15,9 +15,25 @@ export default function Welcome({ auth }) {
                             <ul className="list-disc list-inside">
                                 {auth.user ? (
                                     <>
-                                        <li><Link href={route('dashboard')} className="text-blue-500 underline">Dashboard</Link></li>
-                                        <li><Link href={route('student-dashboard')} className="text-blue-500 underline">Student Dashboard</Link></li>
+                                        {auth.user.role === 'admin' ? (
+                                            <li><Link href={route('admin.dashboard')} className="text-blue-500 underline">Admin Dashboard</Link></li>
+                                        ) : (
+                                            <>
+                                                <li><Link href={route('dashboard')} className="text-blue-500 underline">Dashboard</Link></li>
+                                                <li><Link href={route('student-dashboard')} className="text-blue-500 underline">Student Dashboard</Link></li>
+                                            </>
+                                        )}
                                         <li><Link href={route('subjects.index')} className="text-blue-500 underline">Browse Subjects</Link></li>
+                                        <li>
+                                            <Link
+                                                href={route('logout')}
+                                                method="post"
+                                                as="button"
+                                                className="text-red-500 underline hover:text-red-700"
+                                            >
+                                                Log Out
+                                            </Link>
+                                        </li>
                                     </>
                                 ) : (
                                     <>
