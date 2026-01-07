@@ -1,7 +1,7 @@
 import { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
-import "../../css/HeaderGradient.css"; // Pastikan path sesuai folder css
+import { Head, Link, router } from "@inertiajs/react"; // Tambahkan 'router'
+import "../../css/HeaderGradient.css"; 
 
 export default function Dashboard({
     auth,
@@ -19,7 +19,7 @@ export default function Dashboard({
         return "🌙 Good Night";
     };
 
-    // ================= GRADIENT HEADER BERDASARKAN JAM =================
+    // ================= GRADIENT HEADER THEME =================
     const getHeaderTheme = () => {
         if (hour >= 5 && hour < 11)
             return {
@@ -44,12 +44,20 @@ export default function Dashboard({
 
     const theme = getHeaderTheme();
 
-    // ================= SEARCH =================
+    // ================= CLIENT SIDE FILTERING (DROPDOWN) =================
     const filteredSubjects = searchQuery
         ? allSubjects.filter((s) =>
             s.title.toLowerCase().includes(searchQuery.toLowerCase())
         )
         : [];
+
+    // ================= SERVER SIDE SEARCH (REDIRECT) =================
+    const handleSearch = () => {
+        if (!searchQuery) return;
+        // Ini akan memanggil DashboardController@index dengan parameter ?search=...
+        // Controller akan menangani redirect jika hasil == 1
+        router.get(route('dashboard'), { search: searchQuery });
+    };
 
     return (
         <AuthenticatedLayout>
@@ -64,12 +72,10 @@ export default function Dashboard({
 
             {/* ================= HEADER ================= */}
             <section className="relative overflow-hidden">
-                {/* GRADIENT SESUAI JAM + ANIMASI */}
                 <div
                     className={`absolute inset-0 header-gradient bg-gradient-to-br ${theme.gradient}`}
                 />
 
-                {/* BLOBS STATIC */}
                 <div
                     className={`absolute -top-32 -left-32 w-[28rem] h-[28rem] ${theme.blob} rounded-full blur-3xl`}
                 />
@@ -77,7 +83,6 @@ export default function Dashboard({
                     className={`absolute top-1/3 -right-40 w-[32rem] h-[32rem] ${theme.blob} rounded-full blur-3xl`}
                 />
 
-                {/* CONTENT */}
                 <div className="relative max-w-7xl mx-auto px-6 py-28 text-white">
                     <p className="text-lg opacity-90">{getGreeting()},</p>
                     <h1 className="text-4xl md:text-5xl font-extrabold mt-2">
@@ -94,15 +99,21 @@ export default function Dashboard({
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Cari mata pelajaran atau materi pembelajaran..."
+                            onKeyDown={(e) => e.key === 'Enter' && handleSearch()} // Handle Enter Key
+                            placeholder="Cari mata pelajaran (Tekan Enter untuk pencarian cepat)..."
                             className="w-full px-6 py-4 rounded-xl text-gray-800 shadow-xl focus:ring-4 focus:ring-white/40 outline-none"
                         />
-                        <span className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500">
+                        {/* Ubah Icon jadi Button clickable */}
+                        <button 
+                            onClick={handleSearch}
+                            className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#145da0] transition cursor-pointer"
+                        >
                             🔍
-                        </span>
+                        </button>
 
+                        {/* Dropdown tetap muncul sebagai sugesti */}
                         {searchQuery && (
-                            <div className="absolute left-0 right-0 mt-2 bg-white rounded-xl shadow-lg z-50">
+                            <div className="absolute left-0 right-0 mt-2 bg-white rounded-xl shadow-lg z-50 max-h-80 overflow-y-auto">
                                 {filteredSubjects.length > 0 ? (
                                     filteredSubjects.map((subject) => (
                                         <Link
@@ -111,18 +122,18 @@ export default function Dashboard({
                                                 "subjects.show",
                                                 subject.id
                                             )}
-                                            className="block px-6 py-4 hover:bg-gray-100 transition"
+                                            className="block px-6 py-4 hover:bg-gray-100 transition border-b border-gray-50 last:border-none"
                                         >
                                             <p className="font-medium text-gray-900">
                                                 {subject.title}
                                             </p>
-                                            <p className="text-sm text-gray-500">
+                                            <p className="text-sm text-gray-500 truncate">
                                                 {subject.description}
                                             </p>
                                         </Link>
                                     ))
                                 ) : (
-                                    <div className="px-6 py-4 text-gray-500">
+                                    <div className="px-6 py-4 text-gray-500 text-center">
                                         Mata pelajaran tidak ditemukan
                                     </div>
                                 )}
