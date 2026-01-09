@@ -51,4 +51,6 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 80
 
+ENV LOG_CHANNEL=stderr
+
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
