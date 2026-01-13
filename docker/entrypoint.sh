@@ -10,6 +10,10 @@ if [ ! -f /var/www/database/database.sqlite ]; then
     touch /var/www/database/database.sqlite
 fi
 
+# Fix permissions for sqlite
+chown -R www-data:www-data /var/www/database
+chmod -R 775 /var/www/database
+
 php artisan config:clear
 php artisan config:cache
 php artisan route:cache
