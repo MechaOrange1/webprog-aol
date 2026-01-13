@@ -115,7 +115,6 @@ return [
 
             return [
                 'driver' => 'pgsql',
-                'url' => $url,
                 'host' => $parsed['host'] ?? env('DB_HOST', '127.0.0.1'),
                 'port' => $parsed['port'] ?? env('DB_PORT', '5432'),
                 'database' => ($parsed['path'] ? ltrim($parsed['path'], '/') : env('DB_DATABASE', 'laravel')) . $optionsInjection,
