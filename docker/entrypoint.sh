@@ -9,7 +9,7 @@ php artisan route:cache
 php artisan view:cache
 
 # Run migrations (be careful with this in production if you have multiple instances)
-# php artisan migrate --force
+php artisan migrate --force
 
 # Set the port in nginx.conf
 if [ ! -z "$PORT" ]; then
