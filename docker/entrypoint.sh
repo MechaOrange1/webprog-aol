@@ -21,6 +21,7 @@ php artisan view:cache
 
 # Run migrations (be careful with this in production if you have multiple instances)
 php artisan migrate --force
+php artisan db:seed --force
 
 # Set the port in nginx.conf
 if [ ! -z "$PORT" ]; then
