@@ -83,60 +83,20 @@ return [
             ]) : [],
         ],
 
-        'pgsql' => (function () {
-            $url = env('DATABASE_URL');
-            if (empty($url)) {
-                return [
-                    'driver' => 'pgsql',
-                    'host' => env('DB_HOST', '127.0.0.1'),
-                    'port' => env('DB_PORT', '5432'),
-                    'database' => env('DB_DATABASE', 'laravel'),
-                    'username' => env('DB_USERNAME', 'root'),
-                    'password' => env('DB_PASSWORD', ''),
-                    'charset' => env('DB_CHARSET', 'utf8'),
-                    'prefix' => '',
-                    'prefix_indexes' => true,
-                    'search_path' => 'public',
-                    'sslmode' => env('DB_SSLMODE', 'prefer'),
-                ];
-            }
-
-            $parsed = parse_url($url);
-            $query = [];
-            if (isset($parsed['query'])) {
-                parse_str($parsed['query'], $query);
-            }
-
-            // Extract endpoint/options for injection into dbname
-            $optionsInjection = '';
-            if (isset($query['options'])) {
-                $optionsInjection = "';options=" . $query['options'] . ";application_name='";
-            }
-
-            $config = [
-                'driver' => 'pgsql',
-                // 'url' => $url, // REMOVED to prevent parsing overwrite
-                'host' => $parsed['host'] ?? env('DB_HOST', '127.0.0.1'),
-                'port' => $parsed['port'] ?? env('DB_PORT', '5432'),
-                'database' => ($parsed['path'] ? ltrim($parsed['path'], '/') : env('DB_DATABASE', 'laravel')) . $optionsInjection,
-                'username' => trim($parsed['user'] ?? env('DB_USERNAME', 'root')),
-                'password' => trim($parsed['pass'] ?? env('DB_PASSWORD', '')),
-                'charset' => env('DB_CHARSET', 'utf8'),
-                'prefix' => '',
-                'prefix_indexes' => true,
-                'search_path' => 'public',
-                'sslmode' => $query['sslmode'] ?? env('DB_SSLMODE', 'prefer'),
-                // Ensure options is an array to prevent TypeError in Connector.php
-                'options' => [],
-            ];
-
-            // Debugging output for build logs
-            if (php_sapi_name() === 'cli') {
-                fwrite(STDERR, "DEBUG: PGSQL CONFIG: " . print_r($config, true) . "\n");
-            }
-
-            return $config;
-        })(),
+        'pgsql' => [
+            'driver' => 'pgsql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '5432'),
+            'database' => env('DB_DATABASE', 'laravel'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => env('DB_CHARSET', 'utf8'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => env('DB_SSLMODE', 'prefer'),
+        ],
 
         'sqlsrv' => [
             'driver' => 'sqlsrv',

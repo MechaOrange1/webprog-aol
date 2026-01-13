@@ -4,6 +4,12 @@
 set -e
 
 # Cache configuration
+# Check if sqlite file exists
+if [ ! -f /var/www/database/database.sqlite ]; then
+    echo "Creating database.sqlite..."
+    touch /var/www/database/database.sqlite
+fi
+
 php artisan config:clear
 php artisan config:cache
 php artisan route:cache
